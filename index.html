@@ -749,41 +749,42 @@
         }
 
         .swatches {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 12px 0 14px;
-        }
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 12px 0 14px;
+    flex-wrap: wrap;
+}
 
-        .sw {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            box-shadow: 0 3px 10px rgba(26, 48, 80, .2);
-            transition: transform .3s, box-shadow .3s;
-            cursor: pointer;
-            position: relative;
-        }
+.sw {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(26, 48, 80, .2);
+    transition: transform .3s, box-shadow .3s;
+    cursor: pointer;
+    position: relative;
+}
 
-        .sw::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            border: 1px solid transparent;
-            transition: border-color .3s;
-        }
+.sw::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    transition: border-color .3s;
+}
 
-        .sw:hover {
-            transform: scale(1.22) translateY(-2px);
-            box-shadow: 0 6px 18px rgba(26, 48, 80, .28);
-        }
+.sw:hover {
+    transform: scale(1.22) translateY(-2px);
+    box-shadow: 0 6px 18px rgba(26, 48, 80, .28);
+}
 
-        .sw:hover::after {
-            border-color: rgba(74, 109, 148, .5);
-        }
+.sw:hover::after {
+    border-color: rgba(74, 109, 148, .5);
+}
 
-       .sw1 {
+.sw1 {
     background: #BFD7EA; /* Powder Blue */
 }
 
@@ -801,6 +802,14 @@
 
 .sw5 {
     background: #B7C4CF; /* Blue Gray */
+}
+
+.sw6 {
+    background: #D8E6EF; /* Cloud Blue */
+}
+
+.sw7 {
+    background: #E1F0F7; /* Frost Blue */
 }
 
         .dress-note,
@@ -1334,7 +1343,7 @@
                 <div class="divider reveal d3"><span class="divider-gem">✦</span></div>
 
                 <!-- DRESS CODE -->
-             <div style="margin:4px 0 24px" class="reveal d3">
+<div style="margin:4px 0 24px" class="reveal d3">
     <div class="ent-role" style="font-size:clamp(28px,7.5vw,38px)">Dress Code</div>
     <span class="semi-badge">Semi-Formal</span>
 
@@ -1344,11 +1353,13 @@
         <div class="sw sw3" title="Pale Blue"></div>
         <div class="sw sw4" title="Dusty Blue"></div>
         <div class="sw sw5" title="Blue Gray"></div>
+        <div class="sw sw6" title="Cloud Blue"></div>
+        <div class="sw sw7" title="Frost Blue"></div>
     </div>
 
     <p
         style="font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:2px;color:var(--steel);margin-bottom:12px;text-transform:uppercase">
-        Powder Blue · Soft Blue · Pale Blue · Dusty Blue · Blue Gray
+        Powder Blue · Soft Blue · Pale Blue · Dusty Blue · Blue Gray · Cloud Blue · Frost Blue
     </p>
 
     <p class="dress-note">
