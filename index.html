@@ -1173,10 +1173,448 @@
             line-height: 1.9;
             font-style: italic;
         }
-    </style>
+    
+        /* ═══════════════════════════════════════════
+   OPENING ENVELOPE COVER
+═══════════════════════════════════════════ */
+        #env-cover {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--navy);
+            transition: opacity .9s cubic-bezier(.22,1,.36,1), visibility .9s;
+        }
+        #env-cover.open {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .env-bg {
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml;utf8,\
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%231a3050" width="100" height="100"/><circle cx="50" cy="50" r="40" fill="none" stroke="%234a6d9430" stroke-width="1"/></svg>');
+            opacity: .15;
+        }
+        .env-card {
+            position: relative;
+            width: min(92vw, 420px);
+            background: rgba(245,249,253,.93);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border: 1px solid rgba(255,255,255,.82);
+            border-radius: 4px 4px 28px 28px;
+            padding: 0 32px 40px;
+            box-shadow:
+                0 24px 64px rgba(26,48,80,.32),
+                0 4px 16px rgba(26,48,80,.18),
+                inset 0 1px 0 rgba(255,255,255,.9);
+            text-align: center;
+            overflow: hidden;
+            animation: scaleIn .7s cubic-bezier(.22,1,.36,1) both;
+        }
+        /* envelope flap (triangle at top) */
+        .env-flap {
+            position: relative;
+            width: calc(100% + 64px);
+            margin: 0 -32px 28px;
+            padding-top: 52%;
+            overflow: hidden;
+        }
+        .env-flap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 100%;
+            background: linear-gradient(160deg, var(--frost) 0%, var(--mist) 100%);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            border-bottom: 1px solid rgba(201,169,110,.35);
+        }
+        /* V-fold crease lines */
+        .env-flap::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(135deg, transparent 49.5%, rgba(201,169,110,.18) 49.5%, rgba(201,169,110,.18) 50.5%, transparent 50.5%),
+                linear-gradient(225deg, transparent 49.5%, rgba(201,169,110,.18) 49.5%, rgba(201,169,110,.18) 50.5%, transparent 50.5%);
+        }
+        /* wax seal */
+        .env-seal {
+            position: absolute;
+            top: calc(52% - 30px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 56px;
+            height: 56px;
+            background: radial-gradient(circle at 38% 36%, var(--steel), var(--navy));
+            border-radius: 50%;
+            border: 2px solid rgba(201,169,110,.55);
+            box-shadow:
+                0 4px 14px rgba(26,48,80,.38),
+                inset 0 1px 0 rgba(255,255,255,.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(201,169,110,.9);
+            font-family: 'Great Vibes', cursive;
+            font-size: 22px;
+            z-index: 2;
+            letter-spacing: -.5px;
+        }
+        /* gold border frame inside card */
+        .env-card::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(201,169,110,.3);
+            border-radius: 2px 2px 22px 22px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .env-mono {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 10px;
+            filter: drop-shadow(0 4px 14px rgba(26,48,80,.18));
+            position: relative;
+            z-index: 1;
+        }
+        .env-mono img { width:100%; height:100%; object-fit:contain; }
+        .env-tag {
+            font-family: 'Cinzel', serif;
+            font-size: 8px;
+            letter-spacing: 4px;
+            color: var(--steel);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .env-names {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(52px,14vw,72px);
+            color: var(--navy);
+            line-height: 1;
+            margin-bottom: 4px;
+            text-shadow: 2px 4px 14px rgba(26,48,80,.12);
+            position: relative;
+            z-index: 1;
+        }
+        .env-amp {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(20px,5vw,28px);
+            color: var(--steel);
+            display: block;
+            margin: 2px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .env-date {
+            font-family: 'Cinzel', serif;
+            font-size: 8.5px;
+            letter-spacing: 2.5px;
+            color: var(--steel);
+            text-transform: uppercase;
+            margin: 12px 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .env-divider {
+            width: 48px;
+            height: 1px;
+            background: linear-gradient(90deg,transparent,var(--gold),transparent);
+            margin: 0 auto 22px;
+            position: relative;
+            z-index: 1;
+        }
+        .env-open-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--steel) 100%);
+            color: rgba(245,249,253,.95);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 9.5px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow:
+                0 6px 24px rgba(26,48,80,.32),
+                0 2px 6px rgba(26,48,80,.18);
+            transition: transform .25s cubic-bezier(.22,1,.36,1),
+                        box-shadow .25s,
+                        background .25s;
+            position: relative;
+            z-index: 1;
+        }
+        .env-open-btn:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 10px 32px rgba(26,48,80,.38),
+                0 4px 10px rgba(26,48,80,.2);
+            background: linear-gradient(135deg, var(--steel) 0%, var(--navy) 100%);
+        }
+        .env-open-btn:active { transform: translateY(0); }
+        .env-open-btn:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 3px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #env-cover, .env-card { animation: none; transition: opacity .4s; }
+        }
+
+        /* ═══════════════════════════════════════════
+   LOCATION BUTTONS
+═══════════════════════════════════════════ */
+        .loc-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+        .loc-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: 1.5px solid var(--mist);
+            transition: all .25s cubic-bezier(.22,1,.36,1);
+            text-decoration: none;
+            background: rgba(245,249,253,.75);
+            color: var(--navy);
+        }
+        .loc-btn:hover {
+            border-color: var(--steel);
+            background: rgba(245,249,253,.96);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(26,48,80,.14);
+        }
+        .loc-btn:active { transform: translateY(0); }
+        .loc-btn:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+        .loc-btn i { color: var(--steel); font-size: 12px; }
+        .copy-confirm {
+            display: none;
+            font-family: 'Cinzel', serif;
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: var(--steel);
+            margin-top: 8px;
+            animation: fadeIn .3s ease;
+        }
+        .copy-confirm.show { display: block; }
+
+        /* ═══════════════════════════════════════════
+   ADD TO CALENDAR
+═══════════════════════════════════════════ */
+        .cal-wrap {
+            position: relative;
+            display: inline-block;
+            margin: 22px auto 8px;
+        }
+        .cal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 30px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--steel) 100%);
+            color: rgba(245,249,253,.95);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 6px 22px rgba(26,48,80,.28);
+            transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s;
+        }
+        .cal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(26,48,80,.36);
+        }
+        .cal-btn:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 3px;
+        }
+        .cal-menu {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: rgba(245,249,253,.97);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(201,169,110,.35);
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(26,48,80,.22);
+            padding: 10px 0;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .25s cubic-bezier(.22,1,.36,1), transform .25s cubic-bezier(.22,1,.36,1), visibility .25s;
+        }
+        .cal-menu.open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+            transform: translateX(-50%) translateY(0);
+        }
+        .cal-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 8.5px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--navy);
+            text-decoration: none;
+            transition: background .2s;
+        }
+        .cal-menu a:hover { background: rgba(122,157,191,.12); }
+        .cal-menu a:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+        .cal-menu a i { color: var(--steel); font-size: 13px; width: 16px; text-align: center; }
+        .cal-menu-divider {
+            height: 1px;
+            background: linear-gradient(90deg,transparent,rgba(201,169,110,.3),transparent);
+            margin: 5px 16px;
+        }
+
+        /* ═══════════════════════════════════════════
+   GOOD TO KNOW — FAQ ACCORDION
+═══════════════════════════════════════════ */
+        .gtk-section {
+            margin: 28px 0;
+            text-align: left;
+        }
+        .gtk-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(36px,9.5vw,50px);
+            background: linear-gradient(120deg, var(--navy) 0%, var(--steel) 35%, var(--gold) 50%, var(--steel) 65%, var(--navy) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerText 5s linear infinite;
+            text-align: center;
+            margin-bottom: 18px;
+            display: block;
+        }
+        .gtk-item {
+            border-bottom: 1px solid rgba(184,208,228,.5);
+            overflow: hidden;
+        }
+        .gtk-item:first-of-type { border-top: 1px solid rgba(184,208,228,.5); }
+        .gtk-q {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 14px 4px 14px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 8.5px;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--navy);
+            text-align: left;
+            transition: color .25s;
+        }
+        .gtk-q:hover { color: var(--steel); }
+        .gtk-q:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+        .gtk-chevron {
+            flex-shrink: 0;
+            width: 14px;
+            height: 14px;
+            border-right: 1.5px solid var(--air);
+            border-bottom: 1.5px solid var(--air);
+            transform: rotate(45deg);
+            transition: transform .3s cubic-bezier(.22,1,.36,1);
+            position: relative;
+            top: -2px;
+        }
+        .gtk-item.open .gtk-chevron {
+            transform: rotate(-135deg);
+            top: 2px;
+        }
+        .gtk-ans {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .4s cubic-bezier(.22,1,.36,1);
+        }
+        .gtk-item.open .gtk-ans { max-height: 200px; }
+        .gtk-ans-inner {
+            padding: 0 4px 16px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(13px,3.2vw,15px);
+            color: var(--steel);
+            line-height: 1.65;
+            font-style: italic;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .gtk-ans { transition: none; }
+            .gtk-chevron { transition: none; }
+        }
+</style>
 </head>
 
 <body>
+
+    <!-- ══════════════ OPENING ENVELOPE COVER ══════════════ -->
+    <div id="env-cover" role="dialog" aria-modal="true" aria-label="Wedding invitation cover">
+        <div class="env-bg"></div>
+        <div class="env-card">
+            <!-- envelope flap with seal -->
+            <div class="env-flap">
+                <div class="env-seal" aria-hidden="true">C&amp;G</div>
+            </div>
+
+            <div class="env-mono">
+                <img src="wedding-logo.png" alt="Cliff and Guen wedding monogram">
+            </div>
+
+            <p class="env-tag">You are cordially invited to the wedding of</p>
+
+            <div class="env-names">
+                Cliff
+                <span class="env-amp">and</span>
+                Guen
+            </div>
+
+            <p class="env-date">Saturday &middot; 25 July 2026</p>
+            <div class="env-divider"></div>
+
+            <button
+                class="env-open-btn"
+                onclick="openInvitation()"
+                aria-label="Open the wedding invitation">
+                <i class="fa-regular fa-envelope-open" aria-hidden="true"></i>
+                Open Invitation
+            </button>
+        </div>
+    </div>
+
 
     <!-- BACKGROUND -->
     <div class="bg-wall"></div>
@@ -1265,6 +1703,29 @@
                         D&rsquo; Veranda Events Place<br>
                         Dominggo Village, Tagum City
                     </a>
+
+                    <!-- Location action buttons -->
+                    <div class="loc-btns reveal d4">
+                        <a
+                            href="https://www.google.com/maps/place/D+Veranda+Events+Place/@7.4515823,125.8074449,17z/data=!3m1!4b1!4m6!3m5!1s0x32f9536c7592dbd1:0x8fd8ab8591350700!8m2!3d7.451577!4d125.8100198!16s%2Fg%2F11c1ncjbfn?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="loc-btn"
+                            aria-label="Open venue in Google Maps">
+                            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                            Open in Maps
+                        </a>
+                        <button
+                            class="loc-btn"
+                            onclick="copyAddress()"
+                            aria-label="Copy venue address to clipboard">
+                            <i class="fa-regular fa-copy" aria-hidden="true"></i>
+                            Copy Address
+                        </button>
+                    </div>
+                    <p class="copy-confirm" id="copy-confirm" role="status" aria-live="polite">
+                        ✦ Address copied!
+                    </p>
                 </div>
 
                 <div class="rule reveal d5"></div>
@@ -1479,7 +1940,96 @@
                     </p>
                 </div>
 
-                <div class="photo-frame last-photo-frame reveal d5">
+                
+                <!-- ══════ GOOD TO KNOW ══════ -->
+                <div class="divider reveal d4"><span class="divider-gem">✦</span></div>
+
+                <div class="gtk-section reveal d4">
+                    <p class="section-eyebrow" style="text-align:center;margin-bottom:6px">Everything you need</p>
+                    <span class="gtk-title">Good to Know</span>
+
+                    <div class="gtk-item">
+                        <button class="gtk-q" onclick="toggleFaq(this)" aria-expanded="false">
+                            What time should guests arrive?
+                            <span class="gtk-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="gtk-ans" role="region">
+                            <p class="gtk-ans-inner">We kindly ask all guests to arrive by <strong>1:30 PM</strong> so the ceremony can begin promptly at 2:00 PM.</p>
+                        </div>
+                    </div>
+
+                    <div class="gtk-item">
+                        <button class="gtk-q" onclick="toggleFaq(this)" aria-expanded="false">
+                            What is the dress code?
+                            <span class="gtk-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="gtk-ans" role="region">
+                            <p class="gtk-ans-inner">The dress code is <strong>Semi-Formal</strong>. We request shades of Powder Blue, Soft Blue, Pale Blue, Dusty Blue, or Blue Gray. Please refrain from wearing white or overly bright colors.</p>
+                        </div>
+                    </div>
+
+                    <div class="gtk-item">
+                        <button class="gtk-q" onclick="toggleFaq(this)" aria-expanded="false">
+                            Is parking available?
+                            <span class="gtk-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="gtk-ans" role="region">
+                            <p class="gtk-ans-inner"><!-- PLACEHOLDER: Add parking details here --> Parking details will be confirmed closer to the date. Please check back soon.</p>
+                        </div>
+                    </div>
+
+                    <div class="gtk-item">
+                        <button class="gtk-q" onclick="toggleFaq(this)" aria-expanded="false">
+                            Are children invited?
+                            <span class="gtk-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="gtk-ans" role="region">
+                            <p class="gtk-ans-inner"><!-- PLACEHOLDER: Update to reflect your preference --> Children are warmly welcome! We kindly ask that parents ensure little ones are supervised during the ceremony.</p>
+                        </div>
+                    </div>
+
+                    <div class="gtk-item">
+                        <button class="gtk-q" onclick="toggleFaq(this)" aria-expanded="false">
+                            Can guests bring a plus one?
+                            <span class="gtk-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="gtk-ans" role="region">
+                            <p class="gtk-ans-inner">Due to limited seating, we can only accommodate guests whose names appear on the invitation. Thank you for your understanding.</p>
+                        </div>
+                    </div>
+
+                    <div class="gtk-item">
+                        <button class="gtk-q" onclick="toggleFaq(this)" aria-expanded="false">
+                            When is the RSVP deadline?
+                            <span class="gtk-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="gtk-ans" role="region">
+                            <p class="gtk-ans-inner">Please confirm your attendance before <strong>July 1st, 2026</strong>. Contact Guen at <strong>0951-409-4739</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="gtk-item">
+                        <button class="gtk-q" onclick="toggleFaq(this)" aria-expanded="false">
+                            Are there nearby accommodations?
+                            <span class="gtk-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="gtk-ans" role="region">
+                            <p class="gtk-ans-inner"><!-- PLACEHOLDER: Add hotel/accommodation recommendations near Tagum City --> Several hotels and guesthouses are available near the venue in Tagum City. We'll share a curated list closer to the date.</p>
+                        </div>
+                    </div>
+
+                    <div class="gtk-item">
+                        <button class="gtk-q" onclick="toggleFaq(this)" aria-expanded="false">
+                            Who should guests contact for questions?
+                            <span class="gtk-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="gtk-ans" role="region">
+                            <p class="gtk-ans-inner">For any questions, please reach out to <strong>Guen Avenido</strong> at <strong>0951-409-4739</strong>. We're happy to help!</p>
+                        </div>
+                    </div>
+
+                </div>
+<div class="photo-frame last-photo-frame reveal d5">
                     <img src="DSC00809.jpg" alt="Cliff and Guen wedding photo">
                     <span class="photo-caption">See you on our special day</span>
                 </div>
@@ -1489,6 +2039,42 @@
                 <p class="closing-note reveal d5" style="margin-top:6px">Saturday &middot; 25 July 2026 &middot; 2 PM
                 </p>
                 <p class="closing-note reveal d5">D&rsquo; Veranda Events Place, Tagum City</p>
+                <!-- Add to Calendar -->
+                <div class="reveal d5" style="text-align:center">
+                    <div class="cal-wrap" id="cal-wrap">
+                        <button
+                            class="cal-btn"
+                            onclick="toggleCalMenu()"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-controls="cal-menu"
+                            id="cal-btn">
+                            <i class="fa-regular fa-calendar-plus" aria-hidden="true"></i>
+                            Add to Calendar
+                        </button>
+                        <div class="cal-menu" id="cal-menu" role="menu">
+                            <a
+                                href="https://www.google.com/calendar/render?action=TEMPLATE&text=Cliff+%26+Guen+Wedding&dates=20260725T060000Z%2F20260725T120000Z&details=Wedding+ceremony+of+Cliff+%26+Guen&location=D%27+Veranda+Events+Place%2C+Dominggo+Village%2C+Tagum+City"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                role="menuitem"
+                                aria-label="Add to Google Calendar">
+                                <i class="fa-brands fa-google" aria-hidden="true"></i>
+                                Google Calendar
+                            </a>
+                            <div class="cal-menu-divider"></div>
+                            <a
+                                href="#"
+                                onclick="downloadIcs(event)"
+                                role="menuitem"
+                                aria-label="Download .ics file for Apple Calendar or Outlook">
+                                <i class="fa-solid fa-calendar-arrow-down" aria-hidden="true"></i>
+                                Apple / Outlook (.ics)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
         </section>
@@ -1550,6 +2136,115 @@
         function jumpTo(idx, btn) {
             const el = document.getElementById('sec' + idx);
             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ── WEDDING DETAILS (update if anything changes) ──
+        const WEDDING = {
+            title:    'Cliff & Guen Wedding',
+            dateStr:  'July 25, 2026',
+            // UTC times: 2 PM PHT = 06:00 UTC, ceremony ~4 hrs = 10:00 UTC
+            dtStart:  '20260725T060000Z',
+            dtEnd:    '20260725T120000Z',
+            venue:    "D' Veranda Events Place",
+            address:  "D' Veranda Events Place, Dominggo Village, Tagum City",
+            mapsUrl:  'https://www.google.com/maps/place/D+Veranda+Events+Place/@7.4515823,125.8074449,17z/data=!3m1!4b1!4m6!3m5!1s0x32f9536c7592dbd1:0x8fd8ab8591350700!8m2!3d7.451577!4d125.8100198!16s%2Fg%2F11c1ncjbfn?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D',
+        };
+
+        // ── OPEN INVITATION ──
+        function openInvitation() {
+            const cover = document.getElementById('env-cover');
+            cover.classList.add('open');
+            cover.addEventListener('transitionend', () => cover.remove(), { once: true });
+            document.body.style.overflow = '';
+        }
+
+        // Prevent scroll behind cover on load
+        document.body.style.overflow = 'hidden';
+
+        // ── COPY ADDRESS ──
+        function copyAddress() {
+            const text = WEDDING.address;
+            const confirm = document.getElementById('copy-confirm');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(showCopied).catch(fallbackCopy);
+            } else {
+                fallbackCopy();
+            }
+            function fallbackCopy() {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); showCopied(); } catch(e) {}
+                document.body.removeChild(ta);
+            }
+            function showCopied() {
+                confirm.classList.add('show');
+                setTimeout(() => confirm.classList.remove('show'), 2800);
+            }
+        }
+
+        // ── CALENDAR MENU ──
+        function toggleCalMenu() {
+            const menu = document.getElementById('cal-menu');
+            const btn  = document.getElementById('cal-btn');
+            const open = menu.classList.toggle('open');
+            btn.setAttribute('aria-expanded', open);
+        }
+        // Close calendar menu on outside click
+        document.addEventListener('click', function(e) {
+            const wrap = document.getElementById('cal-wrap');
+            if (wrap && !wrap.contains(e.target)) {
+                document.getElementById('cal-menu').classList.remove('open');
+                document.getElementById('cal-btn').setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // ── DOWNLOAD ICS ──
+        function downloadIcs(e) {
+            e.preventDefault();
+            const ics = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Cliff & Guen Wedding//EN',
+                'BEGIN:VEVENT',
+                'UID:cliff-guen-wedding-2026@invitation',
+                'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z',
+                'DTSTART:' + WEDDING.dtStart,
+                'DTEND:'   + WEDDING.dtEnd,
+                'SUMMARY:' + WEDDING.title,
+                'DESCRIPTION:You are cordially invited to celebrate the wedding of Cliff & Guen.',
+                'LOCATION:' + WEDDING.address,
+                'STATUS:CONFIRMED',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
+            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
+            a.href     = url;
+            a.download = 'cliff-guen-wedding.ics';
+            a.click();
+            URL.revokeObjectURL(url);
+            toggleCalMenu();
+        }
+
+        // ── FAQ ACCORDION ──
+        function toggleFaq(btn) {
+            const item   = btn.closest('.gtk-item');
+            const isOpen = item.classList.contains('open');
+            // Close all
+            document.querySelectorAll('.gtk-item.open').forEach(el => {
+                el.classList.remove('open');
+                el.querySelector('.gtk-q').setAttribute('aria-expanded', 'false');
+            });
+            // Open clicked (unless it was already open)
+            if (!isOpen) {
+                item.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+            }
         }
     </script>
 </body>
